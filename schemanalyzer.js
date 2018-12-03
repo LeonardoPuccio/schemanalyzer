@@ -1,60 +1,76 @@
 /**
- * @fileOverview Frequency analyzer of the schema.org classes.
+ * @fileOverview Frequency analyzer of the schema.org types.
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
  * @version 0.1.0
  */
-
 const fs        = require('fs');
 const readline  = require('readline');
 const axios     = require('axios');
 const WAE       = require('web-auto-extractor').default
-const fij       = require('./find-in-json');
-
+// const fij       = require('./find-in-json'); // Vedi #Unit-Test
 const rl = readline.createInterface({
   input: fs.createReadStream('sitelist.csv'),
   crlfDelay: Infinity
 });
-
 let siteUrls = [];
 
 rl.on('line', (line) => {
-  siteUrls.push(line)
+  siteUrls.push(line);
 });
-
 rl.on('close', () => {
   getStructuredData(siteUrls);
 });
 
 async function getStructuredData(siteUrls){
-  let classes = [];
   let promises = [];
+  let types = JSON.parse(`
+  {
+    "metatags": {},
+    "microdata": {},
+    "rdfa": {},
+    "jsonld": {}
+  }`);
 
   siteUrls.forEach(siteUrl => {
-    promises.push(axios.get(siteUrl)
+    const promise = axios.get(siteUrl)
         .then(function (response) {
           // handle success
-          // console.log(response);
-
-          parsed = WAE().parse(response.data);
-          // console.log(parsed);
-          // console.log(JSON.stringify(parsed));
-          classes.push(Object.keys(parsed));
-          console.log(JSON.stringify(parsed) + ',\n\n');
-          // console.log(JSON.stringify(Object.keys(parsed.metatags).length));
-          // console.log('\nclasses: \n' + classes + '\n********************\n\n');
-
+          let parsed = WAE().parse(response.data);
+          assignToJson(types, parsed)
         })
         .catch(function (error) {
           // handle error
           console.log(error);
-        }))
-    });
+        })
+
+    promises.push(promise);
+  });
 
   await axios.all(promises);
-  console.log('FINISH: \n' + classes);
+  console.log('FINISH: \n' + JSON.stringify(types));
 }
 
-// // Unit Test per esplorare il json
+function assignToJson(types, parsed){
+  Object.keys(parsed).forEach(format => {
+    Object.keys(parsed[format]).forEach(type => {
+
+      // Verifico se la classe esiste e la incremento, altrimenti la aggiungo
+      types[format].hasOwnProperty(type) ? types[format][type]++ : types[format][type] = 1;
+
+      // Vecchio metodo
+      // if ( fij.getValues(types, type)[0] > 0 ){
+      //   // EXISTS
+      //   types[format][type]++
+      // } else {
+      //   types[format][type] = 1;
+      // }
+      // ternary operator
+      // ( fij.getValues(types, type)[0] > 0 ) ? types[format][type]++ : types[format][type] = 1;
+    });
+  });
+}
+
+// // #Unit-Test per esplorare il json ( const fij = require('./find-in-json'); )
 // const schema = JSON.parse(fs.readFileSync('schema.json', 'utf8'));
 // // console.log(schema);
 // // console.log(fij.getValues(schema,'@type').length); // 1613
@@ -72,7 +88,7 @@ async function getStructuredData(siteUrls){
 // }
 // getClasses();
 
-// WORKING
+// Metodo alternativo (più elegante) per il loop asyncrono
 // let promises = siteUrls.map(async siteUrl => {
 //   let response = await axios.get(siteUrl)
 //     .then(function (response) {
@@ -80,8 +96,8 @@ async function getStructuredData(siteUrls){
 //       // console.log(response);
 //       parsed = WAE().parse(response.data);
 //       console.log(JSON.stringify(parsed.jsonld));
-//       classes.push(Object.keys(parsed.jsonld));
-//       // console.log('classes: \n' + classes + '\n\n');
+//       types.push(Object.keys(parsed.jsonld));
+//       // console.log('types: \n' + types + '\n\n');
 //
 //     })
 //     .catch(function (error) {
