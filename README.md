@@ -88,10 +88,11 @@ $ node schemanalyzer
 
 ### References
 
-* [schema.org](schema.org) - Schemas for structured data on the Internet.
+* [schema.org](https://schema.org/) - Schemas for structured data on the Internet.
 * [NodeJS](https://nodejs.org/en/about/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
+* [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js.
 * [Web Auto Extractor](https://github.com/indix/web-auto-extractor) - Parse semantically structured information from any HTML webpage.
-* [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
+* [cheerio](https://github.com/cheeriojs/cheerio) - Implementation of core jQuery designed specifically for the server.
 
 ### WIP
 
@@ -135,7 +136,7 @@ e restituisce un json di questo tipo:
 }
 ```
 
-_dove `dominio` e `keyword` rappresentano il dominio e la parola chiave per la quale effettuare l'analisi._
+dove `dominio` e `keyword` rappresentano il dominio (completo di protocollo) e la parola chiave per la quale effettuare l'analisi.
 
 l'analisi attualmente viene eseguita solo su google.it questa è la lista di parametri che è possibile configurare (con i valori di default):
 
@@ -159,4 +160,4 @@ l'analisi attualmente viene eseguita solo su google.it questa è la lista di par
 }
 ```
 
-è relativamente semplice modificare il prototipo cambiando la `baseURL` con bing e/o yahoo, la lista dei `params` e la funzione `findPosition` affinchè effettui lo scraping all'interno di una pagina diversa da quella di google per la quale è attualmente pensata.
+è relativamente semplice modificare il prototipo cambiando la `baseURL` con bing e/o yahoo, la lista dei `params` e la funzione [`findPosition`](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/serpanalyzer.js#L75-L88) affinchè effettui lo scraping all'interno di una pagina diversa da quella di google per la quale è attualmente pensata.

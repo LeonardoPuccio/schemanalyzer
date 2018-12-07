@@ -17,9 +17,9 @@ function getSerpChecked(serpList){
   let tempPromises = [];
   let promisesDomains = {}
 
-  let promises = Object.keys(serpList).map((serpUrl, i) => {
+  Object.keys(serpList).map((serpUrl, i) => {
     let promisesKeyword = [];
-    let domain = serpList[serpUrl].map(keyword => {
+    serpList[serpUrl].map(keyword => {
       let promise = axios.get('/search', {
         baseURL: 'https://www.google.it',
         timeout: 10000,
@@ -75,11 +75,11 @@ function getSerpChecked(serpList){
 function findPosition(response, domainhostname, keyword){
   let $ = cheerio.load(response.data);
   let temp = {};
-  console.log('Analysis\ndomainhostname: ' + domainhostname + ', keyword: ' + keyword);
+  console.log('Analysis\nWebsite: ' + domainhostname + ', Keyword: ' + keyword);
   $('#search .g .rc > .r > a:first-of-type').each( (i, el) => {
     let elhostname = url.parse(el.attribs.href).hostname;
     if (domainhostname == elhostname ){
-      console.log('Found\ndomainhostname: ' + domainhostname + ', elhostname: ' + elhostname + ', i: ' + i);
+      console.log('Found at position: ' + (i + 1));
       temp[keyword] = i + 1;
     }
   });
