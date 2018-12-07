@@ -1,109 +1,86 @@
 /**
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.1.0
+ * @version 0.1.1
  */
-const fs        = require('fs');
-// const readline  = require('readline');
-const axios     = require('axios');
-const cheerio   = require('cheerio');
-const url       = require('url');
-
-// const rl = readline.createInterface({
-//   input: fs.createReadStream('serpsitelist.csv'),
-//   crlfDelay: Infinity
-// });
-// let serpList = [];
-// // let params = {
-// //   host: 'www.google.it',
-// //   device: 'desktop',
-// //   lang: 'it',
-// //   results: '10',
-// //   filter: '0' // mostra risultati omessi
-// // }
-//
-// rl.on('line', (line) => {
-//   serpList.push(line);
-// });
-// rl.on('close', () => {
-//   splitArrayRow(serpList);
-// });
-//
-// function splitArrayRow(serpList){
-//   let serpArray = serpList.map((serpUrl, i) => {
-//     // DEBUG OK
-//     // console.log('siteUrl: ' + serpUrl + ', i: ' + i);
-//     return serpUrl.split(",");
-//   });
-//   // DEBUG OK
-//   // console.log('serpArray[0]: ' + serpArray[0] + ', serpArray[1]: ' + serpArray[1]);
-//   getSerp(serpArray);
-// }
-
-// let serpList = {}
-// fs.readFile('checkSerpList.json', 'utf8', function (err, data) {
-//   if (err) throw err;
-//   // getSerp(JSON.parse(data));
-// });
+const fs      = require('fs');
+const axios   = require('axios');
+const cheerio = require('cheerio');
+const url     = require('url');
 
 let serpList = JSON.parse(fs.readFileSync('checkSerpList.json', 'utf8'));
-// DEBUG OK
-// console.log(JSON.stringify(serpList));
 
+console.log('Analysis started...')
 getSerpChecked(serpList)
 
 function getSerpChecked(serpList){
-  let resultsArray = []
   let resultsJson = {}
-  Object.keys(serpList).map(serpUrl => {
-    // console.log(serpUrl);
-    let axiosPromises = serpList[serpUrl].map(keyword => {
-      console.log('**GET**');
-      return axios.get('/search', {
+  let tempPromises = [];
+  let promisesDomains = {}
+
+  let promises = Object.keys(serpList).map((serpUrl, i) => {
+    let promisesKeyword = [];
+    let domain = serpList[serpUrl].map(keyword => {
+      let promise = axios.get('/search', {
         baseURL: 'https://www.google.it',
         timeout: 10000,
         params: {
           q: keyword,
-          num: 10,
-          filter: 1,
-        }
+          num: 15,
+          // Ulteriori parametri
+          // hl: 'it',         // lingua interfaccia utente
+          // cr: 'countryIT',  // risultati originari di un determinato paese
+          // lr: 'lang_it',    // risultati scritti in una particolare lingua (non molto efficace)
+          // gl: 'it',         // geolocalizzazione utente finale
+          // filter: 0         // filtro risultati duplicati (0 mostra i risultati)
+        },
+        headers: {
+          "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
+        },
+        serpDomain: serpUrl
       });
+      tempPromises.push(promise);
+      promisesKeyword.push(promise);
     });
-    axios
-    .all(axiosPromises)
-    .then((responses) => {
-      responses.forEach((response, i) => {
-        let keyword = response.config.params.q;
-        let domain = url.parse(serpUrl).hostname;
-        // DEBUG
-        console.log('Success: ' + i + ', domain: ' + domain + ', keyword: ' + keyword);
-        resultsArray.push(findPosition(response, domain, keyword));
-        console.log('resultsArray: ' + JSON.stringify(resultsArray));
-        resultsJson[domain] = resultsArray;
-        sleep((Math.floor(Math.random() * 8)) + 3); // Attendo casualmente dai 3 ai 10 secondi
-      })
-      console.log('submitted all axios calls');
-      console.log(resultsJson);
-    })
-    .catch(error => {
-      // handle error
-      console.log(error);
-    })
+    promisesDomains[serpUrl] = promisesKeyword;
   });
+
+  axios.all(tempPromises)
+  .then((allResponses) => {
+    Object.keys(promisesDomains).map(promisesDomain => {
+      let resultsArray = [];
+      promisesDomains[promisesDomain].map((promiseKeyword, i) => {
+        promiseKeyword.then(result => {
+          let keyword = result.config.params.q;
+          let domainhostname = url.parse(result.config.serpDomain).hostname;
+
+          resultsArray.push(findPosition(result, domainhostname, keyword));
+          resultsJson[domainhostname] = resultsArray;
+
+          sleep((Math.floor(Math.random() * 8)) + 3); // Attendo casualmente dai 3 ai 10 secondi
+        })
+      })
+    })
+  })
+  .catch(error => {
+    // handle error
+    console.log(error);
+  })
+  .then(() => {
+    console.log('submitted all axios calls');
+    console.log(JSON.stringify(resultsJson));
+  })
+
 }
 
-function findPosition(response, domain, keyword){
+function findPosition(response, domainhostname, keyword){
   let $ = cheerio.load(response.data);
-  // let domain = url.parse(domain).hostname
-
-  let temp = {}
-  $('#search .g h3 > a').each( (j, el) => {
-    let elHref = url.parse(el.attribs.href, true).query.q;
-    let elHost = url.parse(elHref).hostname
-
-    // console.log('elHref: ' + elHref + ', elHost: ' + elHost + ', domain: ' + domain + ';\ni: ' + i + ', j: ' + j);
-    if (domain == elHost){
-      // console.log('elHref: ' + elHref + ', elHost: ' + elHost + ', domain: ' + domain + ';\ni: ' + i + ', j: ' + j);
-      temp[keyword] = j + 1;
+  let temp = {};
+  console.log('Analysis\ndomainhostname: ' + domainhostname + ', keyword: ' + keyword);
+  $('#search .g .rc > .r > a:first-of-type').each( (i, el) => {
+    let elhostname = url.parse(el.attribs.href).hostname;
+    if (domainhostname == elhostname ){
+      console.log('Found\ndomainhostname: ' + domainhostname + ', elhostname: ' + elhostname + ', i: ' + i);
+      temp[keyword] = i + 1;
     }
   });
   if (!temp[keyword]) temp[keyword] = 0;
