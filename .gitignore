@@ -1,3 +1,5 @@
 node_modules
+serp-scraper
 /test/
 test.js
+serpanalyzer.js.bk

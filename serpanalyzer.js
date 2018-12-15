@@ -4,42 +4,45 @@
  */
 const fs      = require('fs');
 const axios   = require('axios');
-const cheerio = require('cheerio');
 const url     = require('url');
+const cheerio = require('cheerio');
+
+const serpOptions = require('./serpAnalyzerOptions');
+const resultsJson = {"google":{},"bing":{},"yahoo":{}};
+const instance = axios.create(serpOptions.default);
 
 let serpList = JSON.parse(fs.readFileSync('checkSerpList.json', 'utf8'));
 
-console.log('Analysis started...')
-getSerpChecked(serpList)
+console.log('Analysis started... It can take a few minutes')
+for(var key in serpOptions){
+  if ( key != 'default' ) getSerpChecked(serpList, key);
+}
 
-function getSerpChecked(serpList){
-  let resultsJson = {}
+function getSerpChecked(serpList, searchengine){
+  // let resultsJson = {"google":{},"bing":{},"yahoo":{}};
   let tempPromises = [];
   let promisesDomains = {}
 
   Object.keys(serpList).map((serpUrl, i) => {
     let promisesKeyword = [];
     serpList[serpUrl].map(keyword => {
-      let promise = axios.get('/search', {
-        baseURL: 'https://www.google.it',
-        timeout: 10000,
+      let options = {
+        baseURL: serpOptions[searchengine].baseURL,
         params: {
-          q: keyword,
-          num: 15,
-          // Ulteriori parametri
-          // hl: 'it',         // lingua interfaccia utente
-          // cr: 'countryIT',  // risultati originari di un determinato paese
-          // lr: 'lang_it',    // risultati scritti in una particolare lingua (non molto efficace)
-          // gl: 'it',         // geolocalizzazione utente finale
-          // filter: 0         // filtro risultati duplicati (0 mostra i risultati)
-        },
-        headers: {
-          "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
+          // q: keyword,
         },
         serpDomain: serpUrl
-      });
+      };
+      if (searchengine == 'yahoo') options.params.p = keyword;
+      else options.params.q = keyword;
+      for(var key in serpOptions[searchengine].params) options.params[key] = serpOptions[searchengine].params[key];
+
+      let promise = instance.get('/search', options);
+
       tempPromises.push(promise);
       promisesKeyword.push(promise);
+
+      sleep((Math.floor(Math.random() * 3)) + 1); // Attendo casualmente da 1 a 3 secondi
     });
     promisesDomains[serpUrl] = promisesKeyword;
   });
@@ -50,13 +53,19 @@ function getSerpChecked(serpList){
       let resultsArray = [];
       promisesDomains[promisesDomain].map((promiseKeyword, i) => {
         promiseKeyword.then(result => {
-          let keyword = result.config.params.q;
+          // DEBUG
+          // console.log(result.data);
+          // let keyword = result.config.params.q;
+          let keyword;
+          if (searchengine == 'yahoo') keyword = result.config.params.p;
+          else keyword = result.config.params.q;
           let domainhostname = url.parse(result.config.serpDomain).hostname;
 
-          resultsArray.push(findPosition(result, domainhostname, keyword));
-          resultsJson[domainhostname] = resultsArray;
+          resultsArray.push(scraper(result, domainhostname, keyword, searchengine));
+          resultsJson[searchengine][domainhostname] = resultsArray;
 
-          sleep((Math.floor(Math.random() * 8)) + 3); // Attendo casualmente dai 3 ai 10 secondi
+          // Spostato
+          // sleep((Math.floor(Math.random() * 8)) + 3); // Attendo casualmente dai 3 ai 10 secondi
         })
       })
     })
@@ -72,19 +81,39 @@ function getSerpChecked(serpList){
 
 }
 
-function findPosition(response, domainhostname, keyword){
+function scraper(response, domainhostname, keyword, searchengine){
+  const selector = {
+    google: '#search .g .rc > .r > a:first-of-type',
+    bing: '.b_algo > h2 > a',
+    yahoo: '#web > ol > li h3 > a.ac-algo.fz-l.ac-21th.lh-24'
+  };
   let $ = cheerio.load(response.data);
   let temp = {};
   console.log('Analysis\nWebsite: ' + domainhostname + ', Keyword: ' + keyword);
-  $('#search .g .rc > .r > a:first-of-type').each( (i, el) => {
-    let elhostname = url.parse(el.attribs.href).hostname;
+  $(selector[searchengine]).each( (i, el) => {
+    // let elhostname = url.parse(el.attribs.href).hostname;
+    let elHref = el.attribs.href;
+    if (searchengine == 'yahoo') elHref = parseYahooHref(elHref);
+    let elhostname = url.parse(elHref).hostname;
+
     if (domainhostname == elhostname ){
       console.log('Found at position: ' + (i + 1));
       temp[keyword] = i + 1;
+      return false;
     }
   });
   if (!temp[keyword]) temp[keyword] = 0;
   return temp;
+}
+
+function parseYahooHref(yahooHref){
+  // console.log( 'yahooHref: ' + yahooHref );
+  let regex = /RU=(.*)\/RK/g;
+  let found = regex.exec(yahooHref);
+  // console.log( 'url: ' + found[1] );
+  // console.log( 'decodeURIComponent(found[1]): ' + decodeURIComponent(found[1]) );
+  // console.log();
+  return decodeURIComponent(found[1]);
 }
 
 function msleep(n) {
