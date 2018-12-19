@@ -1,7 +1,7 @@
 # schemanalyzer
 _Frequency analyzer of the schema.org classes in nodejs_
 
-A scopo dimostrativo l'app permette di caricare una lista di siti dal file [sitelist.csv](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/sitelist.csv), per ogni sito verrà scaricato l'HTML e fatto un parsing per conteggiare tutte le classi schema.org per ogni formato (microdata, rdfa, json-ld).
+A scopo dimostrativo l'app permette di caricare una lista di siti dal file [sitelist.csv](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/input_data/sitelist.csv), per ogni sito verrà scaricato l'HTML e fatto un parsing per conteggiare tutte le classi schema.org per ogni formato (microdata, rdfa, json-ld).
 
 Il parsing restituisce un oggetto json di questo tipo:
 ```json
@@ -138,7 +138,8 @@ e restituisce un json di questo tipo:
 
 dove `dominio` e `keyword` rappresentano il dominio (completo di protocollo) e la parola chiave per la quale effettuare l'analisi.
 
-l'analisi attualmente viene eseguita solo su google.it questa è la lista di parametri che è possibile configurare (con i valori di default):
+l'analisi attualmente viene eseguita su google, bing e yahoo.
+Di seguito la lista di parametri che è possibile configurare con google (con i valori di default):
 
 ```obj
 {
@@ -160,4 +161,48 @@ l'analisi attualmente viene eseguita solo su google.it questa è la lista di par
 }
 ```
 
-è relativamente semplice modificare il prototipo cambiando la `baseURL` con bing e/o yahoo, la lista dei `params` e la funzione [`findPosition`](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/serpanalyzer.js#L75-L88) affinchè effettui lo scraping all'interno di una pagina diversa da quella di google per la quale è attualmente pensata.
+I risultati dell'analisi vengono salvati in un database [mongodb remoto](https://cloud.mongodb.com), l'URI per la connessione vi verrà inviato in privato nel caso vogliate avere accesso.
+
+Il db è composto da una collezione di `measurements` così composti:
+```json
+{
+  "_id": "ID",
+  "timestamp": "data",
+  "domains": [
+    {
+      "domain": "www.dominio1.it",
+      "keywords": [
+        {
+          "keyword": "Keyword1",
+          "measurement": {
+            "google": "posizione ($numberInt)",
+            "bing": "posizione ($numberInt)",
+            "yahoo": "posizione ($numberInt)"
+          }
+        },
+        {
+          "keyword": "Keyword2",
+          "measurement": {
+            "google": "posizione ($numberInt)",
+            "bing": "posizione ($numberInt)",
+            "yahoo": "posizione ($numberInt)"
+          }
+        }
+      ]
+    },
+    {
+      "domain": "www.dominio2.com",
+      "keywords": [
+        {
+          "keyword": "Keyword1",
+          "measurement": {
+            "google": "posizione ($numberInt)",
+            "bing": "posizione ($numberInt)",
+            "yahoo": "posizione ($numberInt)"
+          }
+        }
+      ]
+    }
+  ]
+}
+```

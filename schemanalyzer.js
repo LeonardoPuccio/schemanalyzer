@@ -8,7 +8,7 @@ const readline  = require('readline');
 const axios     = require('axios');
 const WAE       = require('web-auto-extractor').default
 const rl = readline.createInterface({
-  input: fs.createReadStream('sitelist.csv'),
+  input: fs.createReadStream('./input_data/sitelist.csv'),
   crlfDelay: Infinity
 });
 let siteUrls = [];

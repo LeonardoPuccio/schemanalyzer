@@ -7,11 +7,11 @@ const axios   = require('axios');
 const url     = require('url');
 const cheerio = require('cheerio');
 
-const serpOptions = require('./serpAnalyzerOptions');
+const serpOptions = require('./config/serpAnalyzerOptions');
 const resultsJson = {"google":{},"bing":{},"yahoo":{}};
 const instance = axios.create(serpOptions.default);
 
-let serpList = JSON.parse(fs.readFileSync('checkSerpList.json', 'utf8'));
+let serpList = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
 
 console.log('Analysis started... It can take a few minutes')
 for(var key in serpOptions){
@@ -53,9 +53,6 @@ function getSerpChecked(serpList, searchengine){
       let resultsArray = [];
       promisesDomains[promisesDomain].map((promiseKeyword, i) => {
         promiseKeyword.then(result => {
-          // DEBUG
-          // console.log(result.data);
-          // let keyword = result.config.params.q;
           let keyword;
           if (searchengine == 'yahoo') keyword = result.config.params.p;
           else keyword = result.config.params.q;
@@ -91,7 +88,6 @@ function scraper(response, domainhostname, keyword, searchengine){
   let temp = {};
   console.log('Analysis\nWebsite: ' + domainhostname + ', Keyword: ' + keyword);
   $(selector[searchengine]).each( (i, el) => {
-    // let elhostname = url.parse(el.attribs.href).hostname;
     let elHref = el.attribs.href;
     if (searchengine == 'yahoo') elHref = parseYahooHref(elHref);
     let elhostname = url.parse(elHref).hostname;
@@ -107,12 +103,11 @@ function scraper(response, domainhostname, keyword, searchengine){
 }
 
 function parseYahooHref(yahooHref){
-  // console.log( 'yahooHref: ' + yahooHref );
   let regex = /RU=(.*)\/RK/g;
   let found = regex.exec(yahooHref);
-  // console.log( 'url: ' + found[1] );
-  // console.log( 'decodeURIComponent(found[1]): ' + decodeURIComponent(found[1]) );
-  // console.log();
+
+  console.log("found[1]" + found[1])
+
   return decodeURIComponent(found[1]);
 }
 

@@ -1,4 +1,6 @@
 /**
+ * Metodo alternativo per la lettura da file csv invece di json
+ *
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
  * @version 0.1.0
  */
@@ -9,7 +11,7 @@ const cheerio   = require('cheerio');
 const url       = require('url');
 
 const rl = readline.createInterface({
-  input: fs.createReadStream('serpsitelist-other_method.csv'),
+  input: fs.createReadStream('./input_data/serpsitelist-other_method.csv'),
   crlfDelay: Infinity
 });
 let serpList = [];
