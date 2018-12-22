@@ -118,28 +118,32 @@ e restituisce un json di questo tipo:
 
 ```json
 {
-  "dominio 1": [
-    {
-      "keyword 1": "posizione (int)"
+  "dominio 1": {
+    "keyword 1": {
+      "google": "posizione (int)",
+      "bing": "posizione (int)",
+      "yahoo": "posizione (int)"
     },
-    {
-      "keyword 2": 0
-    },
-    ...
-  ],
-  "dominio 2": [
-    {
-      "keyword 1": 1
+    "keyword 2": {
+      "google": 28,
+      "bing": 24,
+      "yahoo": 25
     }
-    ...
-  ]
+  },
+  "dominio 2": {
+    "keyword 1": {
+      "google": 1,
+      "bing": 1,
+      "yahoo": 1
+    }
+  }
 }
 ```
 
-dove `dominio` e `keyword` rappresentano il dominio (completo di protocollo) e la parola chiave per la quale effettuare l'analisi.
+dove `dominio` e `keyword` rappresentano il dominio  e la parola chiave per la quale effettuare l'analisi.
 
 l'analisi attualmente viene eseguita su google, bing e yahoo.
-Di seguito la lista di parametri che è possibile configurare con google (con i valori di default):
+Di seguito la lista di parametri che è possibile configurare nel caso di google (con i valori di default):
 
 ```obj
 {
@@ -147,7 +151,7 @@ Di seguito la lista di parametri che è possibile configurare con google (con i 
   timeout: 10000,
   params: {
     q: keyword,
-    num: 15,
+    num: 30,
     Ulteriori parametri
     hl: 'it',         // lingua interfaccia utente
     cr: 'countryIT',  // risultati originari di un determinato paese
