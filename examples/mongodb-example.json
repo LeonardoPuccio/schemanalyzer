@@ -1,312 +1,324 @@
 {
-  "www.bebventodiscirocco.it": [
+  "_id": {
+    "$oid": "5c1c06a0301c652e1ca067f9"
+  },
+  "timestamp": "2018-12-20",
+  "domains": [
     {
-      "B&B Vento di Scirocco": {
-        "google": [
-          {
-            "2018-12-17": 0
+      "_id": {
+        "$oid": "5c1c06a0301c652e1ca06806"
+      },
+      "domain": "www.bebventodiscirocco.it",
+      "keywords": [
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca0680d"
+          },
+          "keyword": "B&B Vento di Scirocco",
+          "measurement": {
+            "google": {
+              "$numberInt": "1"
+            },
+            "bing": {
+              "$numberInt": "1"
+            },
+            "yahoo": {
+              "$numberInt": "1"
+            }
           }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca0680c"
+          },
+          "keyword": "sagra del mandorlo in fiore",
+          "measurement": {
+            "google": {
+              "$numberInt": "27"
+            },
+            "bing": {
+              "$numberInt": "25"
+            },
+            "yahoo": {
+              "$numberInt": "26"
+            }
           }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca0680b"
+          },
+          "keyword": "b&b favara",
+          "measurement": {
+            "google": {
+              "$numberInt": "17"
+            },
+            "bing": {
+              "$numberInt": "18"
+            },
+            "yahoo": {
+              "$numberInt": "23"
+            }
           }
-        ]
-      }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca0680a"
+          },
+          "keyword": "festa del cioccolato favara",
+          "measurement": {
+            "google": {
+              "$numberInt": "11"
+            },
+            "bing": {
+              "$numberInt": "6"
+            },
+            "yahoo": {
+              "$numberInt": "9"
+            }
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06809"
+          },
+          "keyword": "guest review award 2018",
+          "measurement": {
+            "google": {
+              "$numberInt": "9"
+            },
+            "bing": {
+              "$numberInt": "8"
+            },
+            "yahoo": {
+              "$numberInt": "5"
+            }
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06808"
+          },
+          "keyword": "scala dei turchi b&b",
+          "measurement": {
+            "google": {
+              "$numberInt": "0"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06807"
+          },
+          "keyword": "eventi favara",
+          "measurement": {
+            "google": {
+              "$numberInt": "28"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      ]
     },
     {
-      "sagra del mandorlo in fiore": {
-        "google": [
-          {
-            "2018-12-17": 0
+      "_id": {
+        "$oid": "5c1c06a0301c652e1ca06800"
+      },
+      "domain": "www.biowoodheater.it",
+      "keywords": [
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06805"
+          },
+          "keyword": "Bio Wood Heater",
+          "measurement": {
+            "google": {
+              "$numberInt": "1"
+            },
+            "bing": {
+              "$numberInt": "1"
+            },
+            "yahoo": {
+              "$numberInt": "1"
+            }
           }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06804"
+          },
+          "keyword": "pellet bio wood",
+          "measurement": {
+            "google": {
+              "$numberInt": "5"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
           }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06803"
+          },
+          "keyword": "gruneholz",
+          "measurement": {
+            "google": {
+              "$numberInt": "1"
+            },
+            "bing": {
+              "$numberInt": "1"
+            },
+            "yahoo": {
+              "$numberInt": "1"
+            }
           }
-        ]
-      }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06802"
+          },
+          "keyword": "pellet sicilia bio wood",
+          "measurement": {
+            "google": {
+              "$numberInt": "1"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
+          }
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca06801"
+          },
+          "keyword": "contatti pellet sicilia",
+          "measurement": {
+            "google": {
+              "$numberInt": "0"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      ]
     },
     {
-      "sagra del mandorlo in fiore": {
-        "google": [
-          {
-            "2018-12-17": 0
+      "_id": {
+        "$oid": "5c1c06a0301c652e1ca067fa"
+      },
+      "domain": "afavara.it",
+      "keywords": [
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca067ff"
+          },
+          "keyword": "agenzia viaggi patti",
+          "measurement": {
+            "google": {
+              "$numberInt": "12"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
           }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca067fe"
+          },
+          "keyword": "tutto schiuma favara",
+          "measurement": {
+            "google": {
+              "$numberInt": "20"
+            },
+            "bing": {
+              "$numberInt": "6"
+            },
+            "yahoo": {
+              "$numberInt": "7"
+            }
           }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca067fd"
+          },
+          "keyword": "80 voglia di pizza",
+          "measurement": {
+            "google": {
+              "$numberInt": "1"
+            },
+            "bing": {
+              "$numberInt": "23"
+            },
+            "yahoo": {
+              "$numberInt": "27"
+            }
           }
-        ]
-      }
-    },
-    {
-      "sagra del mandorlo in fiore": {
-        "google": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca067fc"
+          },
+          "keyword": "autofabaria",
+          "measurement": {
+            "google": {
+              "$numberInt": "3"
+            },
+            "bing": {
+              "$numberInt": "2"
+            },
+            "yahoo": {
+              "$numberInt": "2"
+            }
           }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
+        },
+        {
+          "_id": {
+            "$oid": "5c1c06a0301c652e1ca067fb"
+          },
+          "keyword": "preventivi giardinaggio",
+          "measurement": {
+            "google": {
+              "$numberInt": "0"
+            },
+            "bing": {
+              "$numberInt": "0"
+            },
+            "yahoo": {
+              "$numberInt": "0"
+            }
           }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "sagra del mandorlo in fiore": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "sagra del mandorlo in fiore": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
+        }
+      ]
     }
   ],
-  "www.biowoodheater.it": [
-    {
-      "Bio Wood Heater": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "pellet bio wood": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "gruneholz": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "pellet sicilia bio wood": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "contatti pellet sicilia": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    }
-  ],
-  "afavara.it": [
-    {
-      "agenzia viaggi patti": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "tutto schiuma favara": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "80 voglia di pizza": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "autofabaria": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    },
-    {
-      "preventivi giardinaggio": {
-        "google": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "bing": [
-          {
-            "2018-12-17": 0
-          }
-        ],
-        "yahoo": [
-          {
-            "2018-12-17": 0
-          }
-        ]
-      }
-    }
-  ]
+  "__v": {
+    "$numberInt": "0"
+  }
 }

@@ -1,7 +1,7 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
 
-const measurementInput  = require('../test/measurements/2018-12-19');
+const measurementInput  = require('../test/measurements/2018-12-20');
 
 mongoose.connect(URI, { useNewUrlParser: true });
 
@@ -42,7 +42,7 @@ measurement.find({}, function (err, result) {
 });
 
 function getMeasurement(){
-  let measurementObject = {"timestamp":"2018-12-19","domains":[]};
+  let measurementObject = {"timestamp":"2018-12-20","domains":[]};
   let i = 0;
   for (let domain in measurementInput.google){
     let keywordsArr = [];

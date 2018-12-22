@@ -1,6 +1,5 @@
 node_modules
+old_method
 serp-scraper
 /test/
 test.js
-serpanalyzer.js.bk
-mongooseSchema.js

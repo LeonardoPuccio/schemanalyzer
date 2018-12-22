@@ -3,6 +3,7 @@ module.exports = {
     timeout: 10000,
     headers: {
       "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
+      // "user-agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
     }
   },
   google: {
@@ -24,17 +25,19 @@ module.exports = {
     }
   },
   yahoo: {
-    baseURL: 'https://it.search.yahoo.com',
-    // baseURL: 'https://search.yahoo.com',
+    // more info https://search.yahoo.com//web/advanced
+    baseURL: 'https://it.search.yahoo.com/',
     params: {
-      n: 30, // MAX 40, intervalli di 10
+      n: 30,
       // ei: 'UTF-8',
-      // p: ''
-      // fr: 'yfp-t',
-      // fp: 1,
-      // toggle: 1,
-      // cop: 'mss',
-      // ei: 'UTF-8'
+      // va_vt: 'any',
+      // vo_vt: 'any',
+      // ve_vt: 'any',
+      // vp_vt: 'any',
+      // vst: 0,
+      // vf: 'all',
+      // vm: 'i',
+      // fl: 0
     }
   }
 }
