@@ -1,22 +1,23 @@
 /**
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.2.0
+ * @version 0.2.1
  */
 const fs      = require('fs');
-const axios   = require('axios');
+const fetch   = require('node-fetch');
 const url     = require('url');
 const cheerio = require('cheerio');
 
 const serpOptions = require('./config/serpAnalyzerOptions');
-const instance = axios.create(serpOptions.default);
+const insertToDB  = require('./utils/insertToDB').insertToDB;
+const serpList    = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
 
-const serpList = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
-
-console.log('Analysis started... It can take a few minutes');
+console.log('\nAnalysis started... It can take a few minutes');
 
 getAllSerpResult()
   .then((resultsJson) => {
     console.log("json result:\n" + JSON.stringify(resultsJson));
+    console.log("\nInsert to DB...");
+    insertToDB(resultsJson);
   })
   .catch(error => {
     console.log("Error in getAllSerpResult()");
@@ -35,55 +36,36 @@ async function getAllSerpResult() {
       let keyword = serpList[domain][i];
       console.log('- keyword: ' + keyword);
       resultsJson[domainHostname][keyword] = {};
-      for (let searchengine in serpOptions){
 
+      for (let searchengine in serpOptions){
         if (searchengine != 'default'){
           console.log('Analysis for ' + searchengine);
+          let urlSearch = url.parse(serpOptions[searchengine].baseURL, true)
           let options = {
-            baseURL: serpOptions[searchengine].baseURL,
-            params: {},
-            serpDomain: domainHostname
+            protocol: urlSearch.protocol,
+            hostname: urlSearch.hostname,
+            pathname: '/search',
+            query: serpOptions[searchengine].params
           };
-          for(var param in serpOptions[searchengine].params) options.params[param] = serpOptions[searchengine].params[param];
-          options.params.q = keyword;
-          // if ( searchengine != "yahoo" ) options.params.q = keyword;
-          //
-          // if ( searchengine == "yahoo" ) {
-          //   options.params.p = keyword;
-          //   options.params.vs = '';
-          //   msleep(getRandomIntInclusive(10000, 30000));
-          //   const userAgents = [
-          //     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36",
-          //     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36",
-          //     "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36",
-          //     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36",
-          //     "Mozilla/5.0 (Windows NT 5.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1",
-          //     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0",
-          //     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1"
-          //   ]
-          //
-          //   let randUserAgent = userAgents[Math.random() * userAgents.length | 0]
-          //
-          //   options.withCredentials = true;
-          //   // options.headers = {
-          //   //   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-          //   //   "accept-encoding": " gzip, deflate, br",
-          //   //   "accept-language": "it,en-US;q=0.9,en;q=0.8",
-          //   //   "cookie": "GUC=AQABAQFcHPVdBUIb5ARY&s=AQAAAMYiGXa7&g=XBupuw; B=093ks9te1nadg&b=3&s=mk; ymuid=v=10AC97EA9D696ED408659B2C9C026F71&ts=1545319261",
-          //   //   "upgrade-insecure-requests": 1,
-          //   //   // "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36"
-          //   // }
-          //   options.headers = {}
-          //   options.headers["user-agent"] = randUserAgent;
-          // }
-          // else msleep(getRandomIntInclusive(1000, 3000)); // Attendo casualmente da 1000 a 3000 ms
-          msleep(getRandomIntInclusive(1000, 3000)); // Attendo casualmente da 1000 a 3000 ms
-          response = await instance.get('/search', options);
+          options.query.q = keyword;
+          urlSearch = url.format(options);
+
+          msleep(getRandomIntInclusive(1000, 3000)); // Attendo casualmente da 1000 a 2000 ms
+
+          let data = await fetch(urlSearch, serpOptions.default);
+          // workaround per non usare un proxy
+          while ( data.status == 999 ) {
+            console.log("\nerror 999\n* retry in 240 seconds *");
+            // attesa di 180 secondi piuttosto che inviare richieste su yahoo ogni minuto
+            sleep(240);
+            data = await fetch(urlSearch, serpOptions.default);
+          }
+
+          let response = await data.text();
 
           let position = scraper(response, domainHostname, searchengine);
           resultsJson[domainHostname][keyword][searchengine] = position;
         }
-
       }
       console.log();
     }
@@ -98,7 +80,7 @@ function scraper(response, domainHostname, searchengine){
     bing: '.b_algo > h2 > a',
     yahoo: '#web > ol > li h3 > a.ac-algo.fz-l.ac-21th.lh-24'
   };
-  let $ = cheerio.load(response.data);
+  let $ = cheerio.load(response);
   let position = 0;
 
   $(selector[searchengine]).each( (i, el) => {
@@ -114,14 +96,12 @@ function scraper(response, domainHostname, searchengine){
   });
 
   if (position == 0) console.log('Not Found');
-
   return position;
 }
 
 function parseYahooHref(yahooHref){
   let regex = /RU=(.*)\/RK/g;
   let found = regex.exec(yahooHref);
-
   return decodeURIComponent(found[1]);
 }
 

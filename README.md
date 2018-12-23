@@ -90,13 +90,13 @@ $ node schemanalyzer
 
 * [schema.org](https://schema.org/) - Schemas for structured data on the Internet.
 * [NodeJS](https://nodejs.org/en/about/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
-* [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js.
+* [node-fetch](https://github.com/bitinn/node-fetch) - Promise based HTTP client for the browser and node.js.
 * [Web Auto Extractor](https://github.com/indix/web-auto-extractor) - Parse semantically structured information from any HTML webpage.
 * [cheerio](https://github.com/cheeriojs/cheerio) - Implementation of core jQuery designed specifically for the server.
 
-### WIP
+## Serpanalyzer WIP
 
-Il SERP checker è ancora un work in progress, ci sono 2 versioni, una con lo stesso meccanismo di schemanalyzer, che accetta in input un file csv, ed una versione aggiornata che accetta un file json così composto:
+Il SERP checker prende in input un file json così composto:
 
 ```json
 {
@@ -171,7 +171,7 @@ Il db è composto da una collezione di `measurements` così composti:
 ```json
 {
   "_id": "ID",
-  "timestamp": "data",
+  "timestamp": "data ($date)",
   "domains": [
     {
       "domain": "www.dominio1.it",
