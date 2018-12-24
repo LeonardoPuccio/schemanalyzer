@@ -3,4 +3,5 @@
 /serp-scraper
 /test
 /config/uriDBConnection.js
+.env
 test.js

@@ -5,4 +5,8 @@ let job = new CronJob({
   cronTime: "00 00 6,14,22 * * *",
   onTick: serpanalyzer.start,
   timeZone: "Europe/Rome"
-}).start();
+});
+
+console.log("serpanalyzer started...")
+
+job.start();
