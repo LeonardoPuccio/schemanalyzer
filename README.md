@@ -86,17 +86,11 @@ $ npm install
 $ node schemanalyzer
 ```
 
-### References
+## Serpanalyzer
 
-* [schema.org](https://schema.org/) - Schemas for structured data on the Internet.
-* [NodeJS](https://nodejs.org/en/about/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
-* [node-fetch](https://github.com/bitinn/node-fetch) - Promise based HTTP client for the browser and node.js.
-* [Web Auto Extractor](https://github.com/indix/web-auto-extractor) - Parse semantically structured information from any HTML webpage.
-* [cheerio](https://github.com/cheeriojs/cheerio) - Implementation of core jQuery designed specifically for the server.
+l'App SERP Analyzer viene eseguita in modo schedulato 3 volte al giorno (6:00, 14:00, 22:00 ora italiana) ed è ospitata sui server [Heroku](https://github.com/LeonardoPuccio/schemanalyzer#references). Di seguito alcuni dettagli del suo funzionamento.
 
-## Serpanalyzer WIP
-
-Il SERP checker prende in input un file json così composto:
+L'app prende in input un file json così composto:
 
 ```json
 {
@@ -142,8 +136,8 @@ e restituisce un json di questo tipo:
 
 dove `dominio` e `keyword` rappresentano il dominio  e la parola chiave per la quale effettuare l'analisi.
 
-l'analisi attualmente viene eseguita su google, bing e yahoo.
-Di seguito la lista di parametri che è possibile configurare nel caso di google (con i valori di default):
+l'analisi viene eseguita su google, bing e yahoo.
+Di seguito la lista di parametri che è possibile configurare ad esempio nel caso di google (con i valori di default):
 
 ```obj
 {
@@ -167,7 +161,7 @@ Di seguito la lista di parametri che è possibile configurare nel caso di google
 
 I risultati dell'analisi vengono salvati in un database [mongodb remoto](https://cloud.mongodb.com), l'URI per la connessione vi verrà inviato in privato nel caso vogliate avere accesso.
 
-Il db è composto da una collezione di `measurements` così composti:
+Il db è composto da una collezione di `measurements` così formati:
 ```json
 {
   "_id": "ID",
@@ -210,3 +204,13 @@ Il db è composto da una collezione di `measurements` così composti:
   ]
 }
 ```
+
+### References
+
+* [schema.org](https://schema.org/) - Schemas for structured data on the Internet.
+* [NodeJS](https://nodejs.org/en/about/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
+* [node-fetch](https://github.com/bitinn/node-fetch) - Promise based HTTP client for the browser and node.js.
+* [Web Auto Extractor](https://github.com/indix/web-auto-extractor) - Parse semantically structured information from any HTML webpage.
+* [cheerio](https://github.com/cheeriojs/cheerio) - Implementation of core jQuery designed specifically for the server.
+* [Mongoose](https://github.com/cheeriojs/cheerio) - Mongoose is a [MongoDB](https://www.mongodb.com/) object modeling tool designed to work in an asynchronous environment.
+* [Heroku](https://www.heroku.com/platform) - Heroku is a container-based cloud Platform as a Service (PaaS)

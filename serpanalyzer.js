@@ -1,6 +1,6 @@
 /**
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.2.1
+ * @version 0.3.0
  */
 const fs      = require('fs');
 const fetch   = require('node-fetch');
@@ -11,18 +11,19 @@ const serpOptions = require('./config/serpAnalyzerOptions');
 const insertToDB  = require('./utils/insertToDB').insertToDB;
 const serpList    = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
 
-console.log('\nAnalysis started... It can take a few minutes');
-
-getAllSerpResult()
-  .then((resultsJson) => {
-    console.log("json result:\n" + JSON.stringify(resultsJson));
-    console.log("\nInsert to DB...");
-    insertToDB(resultsJson);
-  })
-  .catch(error => {
-    console.log("Error in getAllSerpResult()");
-    console.log(error);
-  })
+function serpAnalyzer(){
+  console.log('\nAnalysis started... It can take a few minutes');
+  getAllSerpResult()
+    .then((resultsJson) => {
+      console.log("json result:\n" + JSON.stringify(resultsJson));
+      console.log("\nInsert to DB...");
+      insertToDB(resultsJson);
+    })
+    .catch(error => {
+      console.log("Error in getAllSerpResult()");
+      console.log(error);
+    })
+}
 
 async function getAllSerpResult() {
   let resultsJson = {};
@@ -116,3 +117,7 @@ function msleep(n) {
 function sleep(n) {
   msleep(n*1000);
 }
+
+module.exports = {
+  start: serpAnalyzer
+};

@@ -1,8 +1,9 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
+const uriDB     = process.env.URI_MONGODB;
 
 function insertToDB(measurementInput){
-  mongoose.connect(URI, { useNewUrlParser: true });
+  mongoose.connect(uriDB, { useNewUrlParser: true });
 
   const measurementSchema = new Schema({
     timestamp: { type: Date, default: Date.now },
@@ -19,7 +20,6 @@ function insertToDB(measurementInput){
       }]
   });
   const measurement = mongoose.model('measurement', measurementSchema);
-
 
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
