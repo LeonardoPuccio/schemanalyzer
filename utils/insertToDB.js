@@ -24,9 +24,7 @@ function insertToDB(measurementInput){
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
-    // console.log("connected");
     const tmp = new measurement(getMeasurement());
-    // tmp.save();
     tmp.save().then(() => {
       console.log("json to DB completed!");
       db.close();

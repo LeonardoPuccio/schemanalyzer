@@ -10,14 +10,19 @@ const cheerio = require('cheerio');
 const serpOptions = require('./config/serpAnalyzerOptions');
 const insertToDB  = require('./utils/insertToDB').insertToDB;
 const serpList    = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
+const insertDB    = process.env.INSERT_DB;
+
+// serpAnalyzer();
 
 function serpAnalyzer(){
   console.log('\nAnalysis started... It can take a few minutes');
   getAllSerpResult()
     .then((resultsJson) => {
       console.log("json result:\n" + JSON.stringify(resultsJson));
-      console.log("\nInsert to DB...");
-      insertToDB(resultsJson);
+      if (insertDB === 'true'){
+        console.log("\nInsert to DB...");
+        insertToDB(resultsJson);
+      }
     })
     .catch(error => {
       console.log("Error in getAllSerpResult()");
@@ -57,7 +62,7 @@ async function getAllSerpResult() {
           // workaround per non usare un proxy
           while ( data.status == 999 ) {
             console.log("\nerror 999\n* retry in 240 seconds *");
-            // attesa di 180 secondi piuttosto che inviare richieste su yahoo ogni minuto
+            // attesa di 240 secondi piuttosto che inviare richieste su yahoo ogni minuto
             sleep(240);
             data = await fetch(urlSearch, serpOptions.default);
           }
