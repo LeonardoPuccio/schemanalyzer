@@ -61,9 +61,9 @@ async function getAllSerpResult() {
           let data = await fetch(urlSearch, serpOptions.default);
           // workaround per non usare un proxy
           while ( data.status == 999 ) {
-            console.log("\nerror 999\n* retry in 240 seconds *");
-            // attesa di 240 secondi piuttosto che inviare richieste su yahoo ogni minuto
-            sleep(240);
+            console.log("\nerror 999\n* retry in 300 seconds *");
+            // attesa di 300 secondi piuttosto che inviare richieste su yahoo ogni minuto
+            sleep(300);
             data = await fetch(urlSearch, serpOptions.default);
           }
 
