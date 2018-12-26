@@ -64,7 +64,7 @@ Mentre l'output dell'app restituisce un json cumulativo con la somma di tutte le
 ```
 dove `type` rappresenta la classe schema.org e `value` la somma delle occorrenze.
 
-## Test Prototipo
+## Test Prototipo schemanalyzer
 
 ### Prerequisiti
 ##### - [nodejs](https://nodejs.org/)
@@ -89,6 +89,8 @@ $ node schemanalyzer
 ## Serpanalyzer
 
 l'App SERP Analyzer viene eseguita in modo schedulato 3 volte al giorno (6:00, 14:00, 22:00 ora italiana) ed è ospitata sui server [Heroku](https://github.com/LeonardoPuccio/schemanalyzer#references). Di seguito alcuni dettagli del suo funzionamento.
+
+### Input/Output e parametri
 
 L'app prende in input un file json così composto:
 
@@ -137,29 +139,23 @@ e restituisce un json di questo tipo:
 dove `dominio` e `keyword` rappresentano il dominio  e la parola chiave per la quale effettuare l'analisi.
 
 l'analisi viene eseguita su google, bing e yahoo.
-Di seguito la lista di parametri che è possibile configurare ad esempio nel caso di google (con i valori di default):
+Di seguito un esempio di parametri che è possibile configurare nel caso di google (con i valori di default):
 
 ```obj
-{
-  baseURL: 'https://www.google.it',
-  timeout: 10000,
-  params: {
-    q: keyword,
-    num: 30,
-    Ulteriori parametri
-    hl: 'it',         // lingua interfaccia utente
-    cr: 'countryIT',  // risultati originari di un determinato paese
-    lr: 'lang_it',    // risultati scritti in una particolare lingua (non molto efficace)
-    gl: 'it',         // geolocalizzazione utente finale
-    filter: 0         // filtro risultati duplicati (0 mostra i risultati)
-  },
-  headers: {
-    "user-agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
-  }
+baseURL: 'https://www.google.it',
+params: {
+  num: 30,
+  hl: 'it',         // lingua interfaccia utente
+  cr: 'countryIT',  // risultati originari di un determinato paese
+  gl: 'it',         // geolocalizzazione utente finale
+  filter: 0         // filtro risultati duplicati (0 mostra i risultati)
 }
 ```
+I parametri al completo sono presenti nel file [serpAnalyzerOptions.js](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/config/serpAnalyzerOptions.js).
 
-I risultati dell'analisi vengono salvati in un database [mongodb remoto](https://cloud.mongodb.com), l'URI per la connessione vi verrà inviato in privato nel caso vogliate avere accesso.
+### Database
+
+I risultati dell'analisi vengono salvati in un database [mongodb remoto](https://cloud.mongodb.com).
 
 Il db è composto da una collezione di `measurements` così formati:
 ```json
@@ -205,12 +201,44 @@ Il db è composto da una collezione di `measurements` così formati:
 }
 ```
 
+### Esecuzione serpanalyzer in locale
+
+Prerequisiti e dipendenze sono in comune con lo schemanalyzer, dunque qualora non sia già stato fatto è possibile seguire le medesime istruzioni nel caso si voglia eseguire il serpanalyzer localmente.
+
+#### Nozioni preliminari
+
+Il serpanalyzer si avvale di 2 variabili d'ambiente:
+
+| Nome | Valore | Descrizione |
+| ------ | ------ | ------ |
+| `URI_MONGODB` | `string` | l'URI per la connessione al database mongodb |
+| `INSERT_DB` | `string` (solo `true` o `false`) | determina se il risultato dell'analisi debba essere inserito o meno nel database |
+
+la versione live dell'app ha assegnate le variabili in uno spazio dedicato sul server, nel caso l'app debba essere avviata localmente dovranno essere assegnate localmente.
+È possibile assegnare tali variabili in svariati modi che possono dipendere dal sistema operativo, dall'editor di testo in uso, dall'ambiente di sviluppo.
+Le istruzioni di avvio tengono conto dei metodi più generici.
+
+#### Avvio
+
+##### Windows
+```
+$ set URI_MONGODB=<value>
+$ set INSERT_DB=<value>
+$ node serpalyzer
+```
+
+##### Linux
+```
+$ URI_MONGODB=<value> INSERT_DB=<value> node serpalyzer
+```
+
 ### References
 
 * [schema.org](https://schema.org/) - Schemas for structured data on the Internet.
 * [NodeJS](https://nodejs.org/en/about/) - JavaScript runtime built on Chrome's V8 JavaScript engine.
+* [MongoDB](https://www.mongodb.com/) - MongoDB is an open-source document database that provides high performance, high availability, and automatic scaling.
+* [Heroku](https://www.heroku.com/platform) - Heroku is a container-based cloud Platform as a Service (PaaS)
+* [Mongoose](https://github.com/cheeriojs/cheerio) - Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment.
 * [node-fetch](https://github.com/bitinn/node-fetch) - Promise based HTTP client for the browser and node.js.
 * [Web Auto Extractor](https://github.com/indix/web-auto-extractor) - Parse semantically structured information from any HTML webpage.
 * [cheerio](https://github.com/cheeriojs/cheerio) - Implementation of core jQuery designed specifically for the server.
-* [Mongoose](https://github.com/cheeriojs/cheerio) - Mongoose is a [MongoDB](https://www.mongodb.com/) object modeling tool designed to work in an asynchronous environment.
-* [Heroku](https://www.heroku.com/platform) - Heroku is a container-based cloud Platform as a Service (PaaS)
