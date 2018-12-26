@@ -12,8 +12,6 @@ const insertToDB  = require('./utils/insertToDB').insertToDB;
 const serpList    = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
 const insertDB    = process.env.INSERT_DB;
 
-// serpAnalyzer();
-
 function serpAnalyzer(){
   console.log('\nAnalysis started... It can take a few minutes');
   getAllSerpResult()

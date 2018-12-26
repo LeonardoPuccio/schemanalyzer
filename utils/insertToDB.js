@@ -1,30 +1,14 @@
-const mongoose  = require('mongoose');
-const Schema    = mongoose.Schema;
-const uriDB     = process.env.URI_MONGODB;
+const mongoose    = require('mongoose');
+const uriDB       = process.env.URI_MONGODB;
+const Measurement = require('../config/measurementModel');
 
 function insertToDB(measurementInput){
   mongoose.connect(uriDB, { useNewUrlParser: true });
 
-  const measurementSchema = new Schema({
-    timestamp: { type: Date, default: Date.now },
-    domains: [{
-        domain: String,
-        keywords: [{
-            keyword: String,
-            measurement: {
-              google: Number,
-              bing: Number,
-              yahoo: Number
-            }
-          }]
-      }]
-  });
-  const measurement = mongoose.model('measurement', measurementSchema);
-
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
-    const tmp = new measurement(getMeasurement());
+    const tmp = new Measurement(getMeasurement());
     tmp.save().then(() => {
       console.log("json to DB completed!");
       db.close();
