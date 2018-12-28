@@ -56,13 +56,13 @@ async function getAllSerpResult() {
 
           msleep(getRandomIntInclusive(1000, 3000)); // Attendo casualmente da 1000 a 2000 ms
 
-          let data = await fetch(urlSearch, serpOptions.default);
-          // workaround per non usare un proxy
+          let data = await fetchRequest(urlSearch, serpOptions.default, 5);
+
+          // workaround per non usare un proxy con yahoo
           while ( data.status == 999 ) {
             console.log("\nerror 999\n* retry in 300 seconds *");
-            // attesa di 300 secondi piuttosto che inviare richieste su yahoo ogni minuto
-            sleep(300);
-            data = await fetch(urlSearch, serpOptions.default);
+            sleep(300); // attesa di 300 secondi piuttosto che inviare richieste su yahoo ogni minuto
+            data = await fetchRequest(urlSearch, serpOptions.default, 5);
           }
 
           let response = await data.text();
@@ -76,6 +76,19 @@ async function getAllSerpResult() {
   }
 
   return resultsJson;
+}
+
+async function fetchRequest(urlSearch, serpOptionsDefault, retries){
+  try {
+    return await fetch(urlSearch, serpOptionsDefault);
+  } catch(err) {
+    if (retries === 1) throw err;
+    if (err.type == 'request-timeout' ){
+      console.log('\nrequest-timeout - ' + (--retries) + ' attempts left\n* retry in 10 seconds *');
+      sleep(10);
+      return await fetchRequest(urlSearch, serpOptionsDefault, retries);
+    } else console.log(err);
+  }
 }
 
 function scraper(response, domainHostname, searchengine){

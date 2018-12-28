@@ -1,2 +1,2 @@
-worker: node serpanalyzer.js
+worker: node serpanalyzer-local.js
 clock:  node clock.js

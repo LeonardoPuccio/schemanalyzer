@@ -224,12 +224,12 @@ Le istruzioni di avvio tengono conto dei metodi più generici.
 ```
 $ set URI_MONGODB=<value>
 $ set INSERT_DB=<value>
-$ node serpalyzer
+$ node serpalyzer-local
 ```
 
 ##### Linux
 ```
-$ URI_MONGODB=<value> INSERT_DB=<value> node serpalyzer
+$ URI_MONGODB=<value> INSERT_DB=<value> node serpalyzer-local
 ```
 
 ### References

@@ -35,6 +35,6 @@
     "web-auto-extractor": "^1.0.17"
   },
   "engines": {
-    "node": "9.6.1"
+    "node": "10.15.0"
   }
 }
