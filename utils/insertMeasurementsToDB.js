@@ -1,9 +1,8 @@
 const mongoose    = require('mongoose');
-const uriDB       = process.env.URI_MONGODB;
 const Measurement = require('../config/measurementModel');
 
-function insertToDB(measurementInput){
-  mongoose.connect(uriDB, { useNewUrlParser: true });
+function insertMeasurementsToDB(measurementInput){
+  mongoose.connect(process.env.URI_MONGODB, { useNewUrlParser: true });
 
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
@@ -40,5 +39,5 @@ function insertToDB(measurementInput){
 }
 
 module.exports = {
-  insertToDB: insertToDB
+  insertMeasurementsToDB: insertMeasurementsToDB
 };

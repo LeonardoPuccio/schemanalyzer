@@ -7,19 +7,18 @@ const fetch   = require('node-fetch');
 const url     = require('url');
 const cheerio = require('cheerio');
 
-const serpOptions = require('./config/serpAnalyzerOptions');
-const insertToDB  = require('./utils/insertToDB').insertToDB;
-const serpList    = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
-const insertDB    = process.env.INSERT_DB;
+const serpOptions             = require('./config/serpAnalyzerOptions');
+const insertMeasurementsToDB  = require('./utils/insertMeasurementsToDB').insertMeasurementsToDB;
+const serpList                = JSON.parse(fs.readFileSync('./input_data/checkSerpList.json', 'utf8'));
 
 function serpAnalyzer(){
   console.log('\nAnalysis started... It can take a few minutes');
   getAllSerpResult()
     .then((resultsJson) => {
       console.log("json result:\n" + JSON.stringify(resultsJson));
-      if (insertDB === 'true'){
+      if (process.env.INSERT_DB === 'true'){
         console.log("\nInsert to DB...");
-        insertToDB(resultsJson);
+        insertMeasurementsToDB(resultsJson);
       }
     })
     .catch(error => {

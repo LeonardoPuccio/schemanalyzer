@@ -3,5 +3,6 @@
 /serp-scraper
 /test
 /config/uriDBConnection.js
+/input_data/urlsToCheck.json
 .env
 test.js

@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/LeonardoPuccio/schemanalyzer#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "cron": "^1.6.0",
     "fs": "0.0.1-security",
     "mongoose": "^5.4.0",
@@ -36,5 +37,8 @@
   },
   "engines": {
     "node": "10.15.0"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0"
   }
 }
