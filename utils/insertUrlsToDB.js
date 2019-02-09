@@ -8,11 +8,6 @@ function insertUrlsToDB(urlDocumentInput){
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
-    // const tmp = new Url(getUrlStructuredData());
-    // tmp.save().then(() => {
-    //   console.log("json to DB completed!");
-    //   db.close();
-    // });
     for(singleDocument of urlDocumentInput){
       // console.log(JSON.stringify(singleDocument) + '\n\n');
       const tmp = new Url(singleDocument);
@@ -21,18 +16,7 @@ function insertUrlsToDB(urlDocumentInput){
         db.close();
       });
     }
-    // db.close();
   })
-
-  function getUrlStructuredData(){
-    let urlObject = {
-      "microdata": {},
-      "rdfa": {},
-      "jsonld": {}
-    };
-
-    return urlDocumentInput;
-  }
 }
 
 module.exports = {

@@ -62,8 +62,6 @@ function enrichData(parsed, url, obj){
     parsed.countTypes = 0;
     for(format of formats){
       if (Object.keys(parsed[format]).length){
-        // if (!parsed.formats[format])
-        //   parsed.formats[format] = 0;
         parsed.formats[format] = Object.keys(parsed[format]).length;
       } else {
         parsed.formats[format] = 0;

@@ -4,5 +4,6 @@
 /test
 /config/uriDBConnection.js
 /input_data/urlsToCheck.json
+/input_data/urlsToCheck-OK.json
 .env
 test.js

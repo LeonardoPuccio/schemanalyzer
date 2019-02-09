@@ -4,6 +4,11 @@
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
 
+const urlSchema = new Schema({}, { strict: false });
+
+module.exports = mongoose.model('urls', urlSchema);
+
+// Promemoria
 // const urlSchema = new Schema({//Object
 //   // microdata: 'Object',
 //   // rdfa: 'Object',
@@ -28,7 +33,3 @@ const Schema    = mongoose.Schema;
 //   // parsed.types = {};
 //   // parsed.countTypes = 0;
 // }, { strict: false });
-
-const urlSchema = new Schema({}, { strict: false });
-
-module.exports = mongoose.model('urls2', urlSchema);
