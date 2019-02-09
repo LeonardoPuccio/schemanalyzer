@@ -9,8 +9,10 @@ const cheerio = require('cheerio');
 
 const serpOptions   = require('../config/serpAnalyzerOptions');
 const keywordsJson  = JSON.parse(fs.readFileSync('./input_data/keywordsToGetUrls.json', 'utf8'));
-
+let lang = 'en';
+let searchEngine = 'https://www.google.com';
 let resultsJson = {};
+
 console.log('\nAnalysis started... It can take a few minutes\n');
 getAllSerpResult()
   .then(() => {
@@ -24,17 +26,21 @@ getAllSerpResult()
 
 async function getAllSerpResult() {
   for (keywordsGroup in keywordsJson){
+    if (keywordsGroup === 'Italy'){
+      lang = 'it';
+      searchEngine = 'https://www.google.it';
+    }
     for (keyword of keywordsJson[keywordsGroup]){
       console.log('Analysis for ' + keyword);
-      let urlSearch = url.parse('https://www.google.it', true)
+      let urlSearch = url.parse(searchEngine, true)
       let options = {
         protocol: urlSearch.protocol,
         hostname: urlSearch.hostname,
         pathname: '/search',
         query: {
           num: 100,
-          hl: 'it',             // lingua interfaccia utente
-          gl: 'it',             // geolocalizzazione utente finale
+          hl: lang,             // lingua interfaccia utente
+          gl: lang,             // geolocalizzazione utente finale
           // cr: 'countryIT',   // risultati originari di un determinato paese
           // lr: 'lang_it',     // risultati scritti in una particolare lingua (non molto efficace)
           // more info: https://developers.google.com/custom-search/v1/cse/list
