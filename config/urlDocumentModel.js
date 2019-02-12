@@ -6,7 +6,7 @@ const Schema    = mongoose.Schema;
 
 const urlSchema = new Schema({}, { strict: false });
 
-module.exports = mongoose.model('urls', urlSchema);
+module.exports = mongoose.model('urlsBIG', urlSchema);
 
 // Promemoria
 // const urlSchema = new Schema({//Object

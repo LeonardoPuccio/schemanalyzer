@@ -1,11 +1,20 @@
 /**
  * @fileOverview Frequency analyzer of the schema.org types.
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.2.0
+ * @version 0.3.1
  */
 const fs              = require('fs');
-const fetch           = require('node-fetch');
 const WAE             = require('web-auto-extractor').default
+
+/**
+ * AbortController for terminating fetch() requests
+ * More details:
+ * - https://github.com/mo/abortcontroller-polyfill#using-it-on-nodejs
+ * - https://developers.google.com/web/updates/2017/09/abortable-fetch
+ */
+const { AbortController, abortableFetch } = require('abortcontroller-polyfill/dist/cjs-ponyfill');
+const _nodeFetch = require('node-fetch');
+const { fetch, Request } = abortableFetch({fetch: _nodeFetch, Request: _nodeFetch.Request});
 
 const serpOptions     = require('./config/serpAnalyzerOptions');
 const insertUrlsToDB  = require('./utils/insertUrlsToDB').insertUrlsToDB;
@@ -16,30 +25,21 @@ let resultJson        = [];
 getAllStructuredData()
   .then(() => {
     console.log("end of getAllStructuredData()");
-    // console.log(JSON.stringify(resultJson));
     insertUrlsToDB(resultJson);
-    // if (process.env.INSERT_DB === 'true'){
-    //   console.log("\nInsert to DB...");
-    //   insertMeasurementsToDB(resultsJson);
-    // }
   })
   .catch(error => {
-    console.log('* Error in getAllStructuredData() *\n- resultJson: ' + resultJson);
+    console.log('* Error in getAllStructuredData() *\n- resultJson: ' + JSON.stringify(resultJson));
     console.log(error);
   })
 
 async function getAllStructuredData() {
   for (url of Object.keys(urlsJson)){
-    console.log('Analysis for ' + url);
-    // msleep(getRandomIntInclusive(1000, 2000)); // Attendo casualmente da 1000 a 2000 ms
-    let data = await fetchRequest(url, serpOptions.default, 5);
-    if (!data) {
-      continue;
-    }
-    let response = await data.text();
+    console.log('Analysis for source: ' + urlsJson[url].source + ', keyword: ' + urlsJson[url].keyword + ', url: ' + url);
+    let data = await fetchRequest(url, serpOptions.default, 3);
+    if (!data) continue;
     let parsed;
     try {
-      parsed = WAE().parse(response);
+      parsed = WAE().parse(data);
     } catch(err) {
       console.log('* Error in parse() *\n- url: ' + url);
       console.log(err);
@@ -79,19 +79,26 @@ function enrichData(parsed, url, obj){
 }
 
 async function fetchRequest(urlSearch, serpOptionsDefault, retries){
+  const controller = new AbortController();
+  const signal = controller.signal;
+  serpOptionsDefault.signal = signal;
   try {
-    return await fetch(urlSearch, serpOptionsDefault);
+    let response = await fetch(urlSearch, serpOptionsDefault);
+    let innerHTML = await response.text();
+    return innerHTML;
   } catch(err) {
     if (retries === 1) return null;
-    if (err.type == 'request-timeout' ){
-      console.log('\nrequest-timeout - ' + (--retries) + ' attempts left\n* retry in 10 seconds *');
+    if (err.type === 'request-timeout' || err.type === 'body-timeout'){
+      console.log('\n' + err.type + ' - ' + (--retries) + ' attempts left\n* retry in 10 seconds *');
       sleep(10);
       return await fetchRequest(urlSearch, serpOptionsDefault, retries);
     } else {
       console.log('* Error in fetchRequest() *\n- url (urlSearch): ' + urlSearch);
       console.log(err);
-      --retries;
+      return null;
     }
+  } finally {
+    if (controller) controller.abort();
   }
 }
 

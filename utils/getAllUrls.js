@@ -18,6 +18,7 @@ getAllSerpResult()
   .then(() => {
     // console.log("json result:\n" + JSON.stringify(resultsJson));
     fs.writeFileSync('./input_data/urlsToCheck.json', JSON.stringify(resultsJson));
+    console.log("File was saved!");
   })
   .catch(error => {
     console.log("Error in getAllSerpResult()");
@@ -50,7 +51,7 @@ async function getAllSerpResult() {
       urlSearch = url.format(options);
 
       msleep(getRandomIntInclusive(2000, 3000)); // Attendo casualmente da 2000 a 3000 ms
-      let data = await fetchRequest(urlSearch, serpOptions.default, 5);
+      let data = await fetchRequest(urlSearch, serpOptions.default, 3);
       let response = await data.text();
 
       scraper(response, keywordsGroup, keyword);

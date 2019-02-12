@@ -1,7 +1,31 @@
 # schemanalyzer
 _Frequency analyzer of the schema.org classes in nodejs_
 
-A scopo dimostrativo l'app permette di caricare una lista di siti dal file [sitelist.csv](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/input_data/sitelist.csv), per ogni sito verrà scaricato l'HTML e fatto un parsing per conteggiare tutte le classi schema.org per ogni formato (microdata, rdfa, json-ld).
+L'app permette di caricare una lista di siti da un file json così formato:
+
+```json
+{
+  "https://www.example.com": {
+   "position": "<int>",
+   "source": "<string>",
+   "keyword": "<string>"
+  },
+  "https://www.example2.com": {
+   "position": "<int>",
+   "source": "<string>",
+   "keyword": "<string>"
+  },
+  "https://www.example3.com": {
+   "position": "<int>",
+   "source": "<string>",
+   "keyword": "<string>"
+  },
+  ...
+}
+```
+_È possibile fare riferimento a [getAllUrls.js](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/utils/getAllUrls.js) per la generazione del file_
+
+Per ogni sito verrà scaricato l'HTML e fatto un parsing per identificare tutte le classi e proprietà schema.org per ogni formato (microdata, rdfa, json-ld).
 
 Il parsing restituisce un oggetto json di questo tipo:
 ```json
@@ -51,18 +75,34 @@ Il parsing restituisce un oggetto json di questo tipo:
 ```
 _Per approfondimenti vedi [References](https://github.com/LeonardoPuccio/schemanalyzer#references)_
 
-Mentre l'output dell'app restituisce un json cumulativo con la somma di tutte le classi così formato:
+Il dato così ottenuto verrà arricchito di informazioni generando un output di questo tipo:
 ```json
 {
-  "microdata": {
-    "type": "value",
-    ...
+  "jsonld": {
+    "[Type]": [
+      {
+        "[property]": "[value]"
+      }
+    ]
   },
-  "rdfa": {...},
-  "jsonld": {...}
+  "microdata": "<Object>",
+  "rdfa": "<Object>",
+  "url": "https://www.example.com/",
+  "position": "<int>",
+  "source": "<string>",
+  "keyword": "<string>",
+  "formats": {
+    "jsonld": "<int>",
+    "microdata": "<int>",
+    "rdfa": "<int>"
+  },
+  "types": {
+    "[Type]": "<int>"
+  },
+  "countTypes": "<int>"
 }
 ```
-dove `type` rappresenta la classe schema.org e `value` la somma delle occorrenze.
+dove `[Type]` e `[property]` rappresentano classi e proprietà schema.org e `[value]` i rispettivi valori.
 
 ## Test Prototipo schemanalyzer
 
