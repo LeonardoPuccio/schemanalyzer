@@ -1,27 +1,33 @@
 # schemanalyzer
 _Frequency analyzer of the schema.org classes in nodejs_
 
+### ATTENZIONE!
+### Prototipo sperimentale realizzato per Tesi universitaria.
+---------------------------
+
 L'app permette di caricare una lista di siti da un file json così formato:
 
 ```json
-{
-  "https://www.example.com": {
-   "position": "<int>",
-   "source": "<string>",
-   "keyword": "<string>"
+[
+  {
+    "url": "<string>",
+    "position": "<int>",
+    "source": "<string>",
+    "keyword": "<string>"
   },
-  "https://www.example2.com": {
-   "position": "<int>",
-   "source": "<string>",
-   "keyword": "<string>"
+  {
+    "url": "<string>",
+    "position": "<int>",
+    "source": "<string>",
+    "keyword": "<string>"
   },
-  "https://www.example3.com": {
-   "position": "<int>",
-   "source": "<string>",
-   "keyword": "<string>"
-  },
-  ...
-}
+  {
+    "url": "<string>",
+    "position": "<int>",
+    "source": "<string>",
+    "keyword": "<string>"
+  }
+]
 ```
 _È possibile fare riferimento a [getAllUrls.js](https://github.com/LeonardoPuccio/schemanalyzer/blob/master/utils/getAllUrls.js) per la generazione del file_
 
@@ -79,11 +85,7 @@ Il dato così ottenuto verrà arricchito di informazioni generando un output di 
 ```json
 {
   "jsonld": {
-    "[Type]": [
-      {
-        "[property]": "[value]"
-      }
-    ]
+    "[Type]": "<int>"
   },
   "microdata": "<Object>",
   "rdfa": "<Object>",
@@ -102,7 +104,7 @@ Il dato così ottenuto verrà arricchito di informazioni generando un output di 
   "countTypes": "<int>"
 }
 ```
-dove `[Type]` e `[property]` rappresentano classi e proprietà schema.org e `[value]` i rispettivi valori.
+_`[Type]` rappresenta classi e proprietà schema.org._
 
 ## Test Prototipo schemanalyzer
 
@@ -175,8 +177,7 @@ e restituisce un json di questo tipo:
   }
 }
 ```
-
-dove `dominio` e `keyword` rappresentano il dominio  e la parola chiave per la quale effettuare l'analisi.
+_`dominio` e `keyword` rappresentano il dominio  e la parola chiave per la quale effettuare l'analisi._
 
 l'analisi viene eseguita su google, bing e yahoo.
 Di seguito un esempio di parametri che è possibile configurare nel caso di google (con i valori di default):

@@ -1,6 +1,6 @@
 /**
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.3.0
+ * @version 0.3.1
  */
 const fs      = require('fs');
 const fetch   = require('node-fetch');
@@ -11,13 +11,12 @@ const serpOptions   = require('../config/serpAnalyzerOptions');
 const keywordsJson  = JSON.parse(fs.readFileSync('./input_data/keywordsToGetUrls.json', 'utf8'));
 let lang = 'en';
 let searchEngine = 'https://www.google.com';
-let resultsJson = {};
+let results = [];
 
 console.log('\nAnalysis started... It can take a few minutes\n');
 getAllSerpResult()
   .then(() => {
-    // console.log("json result:\n" + JSON.stringify(resultsJson));
-    fs.writeFileSync('./input_data/urlsToCheck.json', JSON.stringify(resultsJson));
+    fs.writeFileSync('./input_data/urlsToCheck.json', JSON.stringify(results));
     console.log("File was saved!");
   })
   .catch(error => {
@@ -42,6 +41,7 @@ async function getAllSerpResult() {
           num: 100,
           hl: lang,             // lingua interfaccia utente
           gl: lang,             // geolocalizzazione utente finale
+          filter: 0,            // filtro risultati duplicati (0 mostra i risultati)
           // cr: 'countryIT',   // risultati originari di un determinato paese
           // lr: 'lang_it',     // risultati scritti in una particolare lingua (non molto efficace)
           // more info: https://developers.google.com/custom-search/v1/cse/list
@@ -53,6 +53,7 @@ async function getAllSerpResult() {
       msleep(getRandomIntInclusive(2000, 3000)); // Attendo casualmente da 2000 a 3000 ms
       let data = await fetchRequest(urlSearch, serpOptions.default, 3);
       let response = await data.text();
+      console.log(data.statusText);
 
       scraper(response, keywordsGroup, keyword);
     }
@@ -65,23 +66,24 @@ async function fetchRequest(urlSearch, serpOptionsDefault, retries){
   } catch(err) {
     if (retries === 1) throw err;
     console.log(err);
-    retries--;
+    sleep(5);
+    return await fetchRequest(urlSearch, serpOptionsDefault, retries--);
   }
 }
 
 function scraper(response, keywordsGroup, keyword){
-  const selector = '#search .g .rc > .r > a:first-of-type';
+  // const selector = '#search .g .rc > .r > a:first-of-type';
+  // const selector = '#search .srg div.r > a:first-of-type';
+  const selector = '#rso > div > div > div > div > div > div.r > a:first-of-type, #rso > div > div > div > div > div.r > a:first-of-type, #rso div.r > h3 > g-link > a';
   let $ = cheerio.load(response);
 
   $(selector).each( (i, el) => {
-    let elHref = el.attribs.href;
-    // let elhostname = url.parse(elHref).hostname;
-    if (resultsJson[elHref]) console.log("Doppione: " + JSON.stringify(resultsJson[elHref]));
-    resultsJson[elHref] = {
+    results.push({
+      url: el.attribs.href,
       position: ++i,
       source: keywordsGroup,
       keyword: keyword
-    };
+    });
   });
 }
 

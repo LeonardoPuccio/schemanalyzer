@@ -4,7 +4,7 @@
 /test
 /config/uriDBConnection.js
 /input_data/urlsToCheck.json
-/input_data/urlsToCheck.json.BK
-/input_data/urlsToCheck-min.json
+/input_data/keywordsToGetUrls.json
+/input_data/urlsToCheck-Beautified.json
 .env
 test.js

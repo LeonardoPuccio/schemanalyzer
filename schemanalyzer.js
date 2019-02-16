@@ -1,7 +1,7 @@
 /**
  * @fileOverview Frequency analyzer of the schema.org types.
  * @author Leonardo Puccio <puccio.leonardo@gmail.com>
- * @version 0.3.1
+ * @version 0.4.0
  */
 const fs              = require('fs');
 const WAE             = require('web-auto-extractor').default
@@ -20,33 +20,41 @@ const serpOptions     = require('./config/serpAnalyzerOptions');
 const insertUrlsToDB  = require('./utils/insertUrlsToDB').insertUrlsToDB;
 const urlsJson        = JSON.parse(fs.readFileSync('./input_data/urlsToCheck.json', 'utf8'));
 const formats         = ['jsonld', 'microdata', 'rdfa'];
-let resultJson        = [];
+let results           = [];
 
 getAllStructuredData()
   .then(() => {
     console.log("end of getAllStructuredData()");
-    insertUrlsToDB(resultJson);
+    insertUrlsToDB(results);
   })
   .catch(error => {
-    console.log('* Error in getAllStructuredData() *\n- resultJson: ' + JSON.stringify(resultJson));
+    console.log('* Error in getAllStructuredData() *\n- results: ' + JSON.stringify(results));
     console.log(error);
   })
 
 async function getAllStructuredData() {
-  for (url of Object.keys(urlsJson)){
-    console.log('Analysis for source: ' + urlsJson[url].source + ', keyword: ' + urlsJson[url].keyword + ', url: ' + url);
-    let data = await fetchRequest(url, serpOptions.default, 3);
+  let counter = 0;
+  for (urlObj of urlsJson){
+    // workaround per strutture molto grandi
+    if (counter == 1000){
+      counter = 0;
+      insertUrlsToDB(results);
+      results = [];
+    }
+    console.log('Analysis for source: ' + urlObj.source + ', keyword: ' + urlObj.keyword + ', url: ' + urlObj.url);
+    let data = await fetchRequest(urlObj.url, serpOptions.default, 3);
     if (!data) continue;
     let parsed;
     try {
       parsed = WAE().parse(data);
     } catch(err) {
-      console.log('* Error in parse() *\n- url: ' + url);
+      console.log('* Error in parse() *\n- url: ' + urlObj.url);
       console.log(err);
       parsed = null;
       continue;
     }
-    enrichData(parsed, url, urlsJson[url]);
+    enrichData(parsed, urlObj.url, urlObj);
+    counter++;
   }
 }
 
@@ -72,9 +80,13 @@ function enrichData(parsed, url, obj){
           parsed.types[type] = 0;
         parsed.countTypes += Object.keys(parsed[format][type]).length;
         parsed.types[type] += parsed[format][type].length;
+        // Cancello il contenuto reale degli attributi e lascio solo il numero di elementi
+        let tmp = parsed[format][type].length;
+        delete parsed[format][type]
+        parsed[format][type] = tmp;
       }
     }
-    resultJson.push(parsed);
+    results.push(parsed);
   }
 }
 

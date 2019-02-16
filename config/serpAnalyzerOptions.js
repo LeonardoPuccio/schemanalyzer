@@ -3,7 +3,7 @@ module.exports = {
     timeout: 10000,
     headers: {
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
-      'accept-language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+      // 'accept-language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
       // 'server': 'gws',
       // 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b2',
       // 'accept-encoding': 'gzip, deflate, br',
